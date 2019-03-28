@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  confluence:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: confluence
+    hostname: confluence
+    depends_on:
+      - mysql
+    volumes:
+      - ./data:/var/atlassian/application-data/confluence
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    environment:
+      - 'JVM_MAXIMUM_MEMORY=2048m'
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=abc123
+      - MYSQL_DATABASE=confluence
+      - MYSQL_USER=confluence
+      - MYSQL_PASSWORD=abc123
